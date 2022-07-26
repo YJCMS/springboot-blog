@@ -4,12 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import project.stevenote.DataNotFoundException;
 import project.stevenote.repository.Memo;
 import project.stevenote.repository.MemoRepository;
 
+import javax.transaction.Transactional;
+import java.beans.Transient;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -37,5 +41,14 @@ public class MemoService {
         m.setFilePath("/images/"+fileName);
         m.setCreateDate(LocalDateTime.now());
         this.memoRepository.save(m);
+    }
+
+    public Memo getMemo(Integer id) {
+        Optional<Memo> memo = this.memoRepository.findById(id);
+        if (memo.isPresent()) {
+            return memo.get();
+        } else {
+            throw new DataNotFoundException("memo not found");
+        }
     }
 }

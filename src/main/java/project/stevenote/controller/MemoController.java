@@ -3,10 +3,7 @@ package project.stevenote.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.stevenote.repository.Memo;
 import project.stevenote.repository.MemoRepository;
@@ -37,5 +34,12 @@ public class MemoController {
                              @RequestParam MultipartFile file) throws Exception {
         this.memoService.posting(subject, content, file);
         return "redirect:/";
+    }
+
+    @RequestMapping(value = "/memo/detail/{id}")
+    public String detail(Model model, @PathVariable("id") Integer id) {
+        Memo memo = this.memoService.getMemo(id);
+        model.addAttribute("memo", memo);
+        return "memo_detail";
     }
 }
